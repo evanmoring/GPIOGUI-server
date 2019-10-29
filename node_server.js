@@ -130,6 +130,8 @@ function changePin(cPin,direction,voltage,blinkBool){
         else{
             cPin.blink=false
                 if(Number(voltage)==0 || 1){
+                    cIO.setDirection('out');
+                    console.log(cIO);
                     cIO.writeSync(Number(voltage));
                     
                 }
@@ -175,11 +177,12 @@ function setupConnection (){
                     return
                 }
                 else{
-                if((data.voltage) === '0' || data.voltage ==='1' ){
+                console.log(data.voltage)
                 if((data.voltage) === '0' || data.voltage ==='1' ){
                     changePin(pinList[data.bcmPin],'out',Number(data.voltage))
                 }
                 if (data.voltage == '1 / 0'){
+                    console.log('1 / 0')
                     changePin(pinList[data.bcmPin],'out',1)
                     setTimeout(changePin,1000,pinList[data.bcmPin],'out',0)
                 }
@@ -188,7 +191,7 @@ function setupConnection (){
                     setTimeout(changePin,1000,pinList[data.bcmPin],'out',1)
                 }
             }
-        }}})
+        }})
         function getAttributes (){
             var voltageCounter = 0;
             for (let i in bcmDictR){
