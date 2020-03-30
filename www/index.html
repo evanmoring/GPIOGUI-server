@@ -1,44 +1,32 @@
 <head>
-<script language="javascript" src="node_modules/socket.io-client/dist/socket.io.js"></script>
+<script language="javascript" src="../node_modules/socket.io-client/dist/socket.io.js"></script>
 <script language="javascript" src="front.js"></script>
+<link rel="stylesheet" href="style.css">
 </head>
-<style>
-body {
-  background-color: linen;
-}
-    
-#pinGrid{
-    display:inline-grid;
-    grid-template-columns: 1fr 1fr;
-    column-width: 20px;
-}
-    
-.pinAttribute{  
-}
 
-.gridWrapper{
-    display: grid;
-    grid-template-columns: 50px 70px 50px  50px 50px;
-}
-
-</style>
 
 <body onload="inititalize()">
-    <form name = 'controlForm' action='' method ='get'>
-        <select name = 'boardPin' id="pinSelect"></select>
-        <select name = 'voltage' id="voltageSelect">
-            <option>in</option>
-            <option>1</option>
-            <option>0</option>
-            <option>1 / 0</option>
-            <option>0 / 1</option>
-            <option>Blink</option>
-        </select>
-        <input type="button" name="submitButton" value='Submit' onclick="readForm()">
-    </form>
-    <input type="button" name="saveButton" value='Save Data' onclick="saveData()">
-    <input type="button" name="loadButton" value='Load Data' onclick="loadData()">
-    <div class="pinAttribute"></div><br>
-    <div id="pinGrid">
+    <div id="wrapper">
+        <div id ="controls" class="border">
+        <div id ="title">GPIO CONTROLS</div>
+        <form name = 'controlForm' action='' method ='get' class="controlButtons">
+            <select name = 'boardPin' id="pinSelect" class ="control form"></select>
+            <select name = 'voltage' id="voltageSelect" class="control form">
+                <option>in</option>
+                <option>1</option>
+                <option>0</option>
+                <option>1 / 0</option>
+                <option>0 / 1</option>
+                <option>Blink</option>
+            </select>
+            <input type="button" name="submitButton" value='Submit' onclick="readForm()" class ="control button">
+        </form>
+        <div class="controlButtons">
+            <input type="button" name="saveButton" value='Save Data' onclick="saveData()" class="control button">
+            <input type="button" name="loadButton" value='Load Data' onclick="loadData()" class="control button">
+        </div>
+        </div>
+        <div id="pinGrid" class="border">
+        </div>
     </div>
 </body>

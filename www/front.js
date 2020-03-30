@@ -34,7 +34,7 @@ function populatePinList(){
     for (i in bcmDict){
     let newOption = document.createElement('option');
     
-    newOption.innerHTML='pin:'+i+' bcm:'+bcmDict[i];
+    newOption.innerHTML='PIN: '+i+'   BCM: '+bcmDict[i];
     newOption.value=bcmDict[i];
     $('pinSelect').appendChild(newOption);
     }
@@ -42,17 +42,12 @@ function populatePinList(){
 
 function inititalize(){
     populatePinList();
+    createPinGridHeader();
+    createPinGridHeader();
     createPins(boardType);
 }
 
-function addAttribute(currentPin,prefix,text) {
-    name = prefix+String(currentPin);
-    var div = document.createElement("DIV");
-    $(String(currentPin)).appendChild(div);
-    div.setAttribute('id',name);
-    $(name).className=('pinAttribute');
-    $(name).innerHTML=text;
-}
+
 function bcmNumber(currentPin){
     if (currentPin in bcmDict){
         return(String(bcmDict[currentPin]))}
@@ -62,7 +57,7 @@ function bcmNumber(currentPin){
 }
 
 function createPinGrid (currentPin) {
-    var div = document.createElement("DIV");
+    let div = document.createElement("DIV");
     $('pinGrid').appendChild(div);
     div.setAttribute('id',String(currentPin));
     $(String(currentPin)).className=('gridWrapper');
@@ -72,7 +67,37 @@ function createPinGrid (currentPin) {
     addAttribute(currentPin,'bcm',bcmNumber(currentPin));
     addAttribute(currentPin,'direction','');
     addAttribute(currentPin,'voltage','') ; 
+    
+    function addAttribute(currentPin,prefix,text) {
+        name = prefix+String(currentPin);
+        var div = document.createElement("DIV");
+        $(String(currentPin)).appendChild(div);
+        div.setAttribute('id',name);
+        $(name).className=('pinAttribute '+ prefix);
+        $(name).innerHTML=text;
+    }
 }
+
+function createPinGridHeader () {
+    var div = document.createElement("DIV");
+    $('pinGrid').appendChild(div);
+    div.className=('gridWrapper gridHeaderWrapper');
+    headerAttributes ('Number');
+    headerAttributes ('Type');
+    headerAttributes ('BCM');
+    headerAttributes ('IN / OUT');
+    headerAttributes ('0 / 1');
+    
+    
+    function headerAttributes (text){
+        let numberDiv = document.createElement("Div")
+        div.appendChild(numberDiv);
+        numberDiv.innerHTML=text;
+        numberDiv.className = ('pinAttributeHeaders ' +text)
+    }
+    
+}
+
 
 var socket = io.connect();
 

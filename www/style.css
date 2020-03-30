@@ -1,0 +1,93 @@
+body {
+  background-color: lightblue;
+    font-family: helvetica;
+    margin: 0px;
+    font-size: 18px;
+}
+    
+#wrapper{
+    display: inline-block;
+    padding: 15px;
+}
+
+.border {
+    border-radius: 4px;
+    border: 4px darkgray;
+    border-style: none solid solid none;
+    padding: 35px;
+}
+
+#controls {
+    background: white;
+    margin-bottom: 20px;
+}
+
+.controlButtons {
+    margin: 0px;
+}
+
+#title {
+    font-weight: bold;
+    font-size: 80px;
+    padding-bottom: 20px;
+    font-variant-caps: all-small-caps;
+}
+
+.control {
+    font-size: 18px;
+    background-color: white; /* Green */
+    border: none;
+    color: black;
+    padding: 5px 5px;
+    margin: 10px 5px 5px 0px;
+    border:  2px lightgray;
+    border-style: outset;
+    border-radius: 2px;
+    text-align: center;
+    display: inline-block;
+    width: 175px;
+    height: 50px;
+}
+    
+.button:active {
+    background: lightgray;
+    border-style: inset;
+}
+
+.form {
+    padding-left: 10px;
+}
+
+#pinGrid{
+    border-radius: 4px;
+    padding: 35px;
+    padding-right: 15px;
+    background: white;
+    display:inline-grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.gridWrapper{
+    display: grid;
+    margin-right: 20px;
+    grid-template-columns: 75px 65px 65px  85px 55px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+    
+.gridWrapper.gridHeaderWrapper {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.pinAttributeHeaders{
+    padding-bottom: 15px;
+    margin: auto auto auto auto;
+}
+
+    
+.pinAttribute{
+        margin-right: auto;
+    margin-left: auto;
+    }
+    
