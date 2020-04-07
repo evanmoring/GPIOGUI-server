@@ -4,7 +4,6 @@ var io = require('socket.io')(http);
 var express = require('express');
 var Gpio = require('onoff').Gpio;
 var fs = require('fs');
-var util = require('util');
 const i2c = require('i2c-bus'); 
 
 const portNumber = 3000;
@@ -38,26 +37,31 @@ function loadSettings(){
     console.log(pinList)
     matchPins()*/
     }
+	console.log('read settings');
     readSettings()
+	console.log('match pins');
     matchPins()
-}
-
-function matchPins(){
+	function matchPins(){
     /*console.log(pinList)*/
-    for (i in pinList){
-        let cPin = pinList[i]
-        if(cPin != false){
-            cPin.inOut = new Gpio(cPin.bcmNumber,cPin.direction,'both',{debounceTimeout: 50});
-            if(cPin.blink==true){
-                console.log ('pin number' +cPin.bcmNumber)
-                changePin(cPin,'out',1,true)
-            }
-            else{
-            changePin(cPin,cPin.direction,cPin.voltage)}
-            }
-        }
+	    for (i in pinList){
+		let cPin = pinList[i];
+		console.log(i);
+		console.log(cPin);
+		if(cPin != false){
+		    cPin.inOut = new Gpio(cPin.bcmNumber,cPin.direction,'both',{debounceTimeout: 50});
+		    if(cPin.blink==true){
+		        console.log ('pin number' +cPin.bcmNumber)
+		        changePin(cPin,'out',1,true)
+		    }
+		    else{
+		    changePin(cPin,cPin.direction,cPin.voltage)}
+		    }
+		}
     
     }
+}
+
+
 
 var bcmDict = {7:4,8:14,10:15,11:17,12:18,13:27,15:22,16:23,18:24,19:10,21:9,22:25,23:11,24:8,26:7,29:5,31:6,32:12,33:13,35:19,36:16,37:26,38:20,40:21};
 
@@ -93,7 +97,7 @@ function setIO(cPin){
     cPin.inOut = new Gpio(cPin.bcmNumber,'in','both',{debounceTimeout: 50});
     let cIO = cPin.inOut;
     cPin.blink = false;
-    cPin.watch == true;
+    cPin.watch = true;
     cPin.inOut.watch((err,value)=>{
         if (err){
                 throw err};
@@ -110,6 +114,7 @@ function setIO(cPin){
 
 function sendPinData(pinBCMNumber){
     let cPin = pinList[pinBCMNumber];
+	console.log(cPin);
     cPin.voltage = cPin.inOut.readSync();
     cPin.direction = cPin.inOut.direction();
     io.sockets.emit('pinData',cPin);
