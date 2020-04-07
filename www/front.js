@@ -17,6 +17,7 @@ function loadData() {
 
 function readForm(){
     let formDict ={};
+	console.log('emitted form');
     formDict.bcmPin=pinSelect.value;
     formDict.voltage=voltageSelect.value;
     socket.emit('form',formDict);
@@ -212,6 +213,7 @@ socket.on('i2cScanReturn',function(scanList){
 });
 
 socket.on('pinData',function(data){
+	console.log('r data');
     $('voltage'+data.boardNumber).innerHTML=data.voltage;
     if(data.voltage==1){
         $('voltage'+data.boardNumber).style.color='red';
