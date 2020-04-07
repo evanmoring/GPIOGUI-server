@@ -3,10 +3,11 @@ body {
     font-family: helvetica;
     margin: 0px;
     font-size: 18px;
+    min-width: 800;
 }
     
 #wrapper{
-    display: inline-block;
+    display: ;
     padding: 15px;
 }
 
@@ -15,6 +16,8 @@ body {
     border: 4px darkgray;
     border-style: none solid solid none;
     padding: 35px;
+    margin-bottom: 20px;
+    background: white;
 }
 
 #controls {
@@ -32,6 +35,9 @@ body {
     padding-bottom: 20px;
     font-variant-caps: all-small-caps;
 }
+input{
+    
+}
 
 .control {
     font-size: 18px;
@@ -39,7 +45,8 @@ body {
     border: none;
     color: black;
     padding: 5px 5px;
-    margin: 10px 5px 5px 0px;
+    margin-bottom: 30px;
+    margin: 10px 5px 15px 0px;
     border:  2px lightgray;
     border-style: outset;
     border-radius: 2px;
@@ -48,21 +55,89 @@ body {
     width: 175px;
     height: 50px;
 }
+
+input:disabled {
+  background: #ccc;
+}
+
+.control.text {
+    width: 100%;
+}
     
 .button:active {
     background: lightgray;
     border-style: inset;
 }
 
-.form {
-    padding-left: 10px;
+label{
+    text-align: center;
+}
+
+#i2ctitle{
+    font-weight: bold;
+    font-size: 40px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+#i2cControls {
+    padding-right: 40px;
+    padding-left: 40px;
+}
+
+#i2cControls.block {
+    display: block;
+}
+
+#i2cControls.none {
+    display: none;
+}
+
+.radio{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#radioDial{
+    height: 85px;
+    margin-bottom: auto;
+    display: inline-grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 20px;
+}
+
+#i2cForm {
+    font-size: 100px;
+}
+
+#i2cGrid {
+    display: grid;
+    justify-content: start;
+    padding-top: 30px;
+    grid-template-columns: 100px 200px 150px 150px;
+    grid-column-gap: 15px;
+}
+
+.inputLabelWrapper{
+    display: grid;
+    grid-template-columns: auto;
+}
+
+#i2cReadout{
+    width: 600;
+    border: 2px solid darkgray;
+    padding: 15px;
+    padding-left: 25px;
+}
+
+.i2cerror {
+	color: red;
+margin-right: 20px;
+display: inline-block;
 }
 
 #pinGrid{
-    border-radius: 4px;
-    padding: 35px;
-    padding-right: 15px;
-    background: white;
+
     display:inline-grid;
     grid-template-columns: 1fr 1fr;
 }
@@ -87,7 +162,6 @@ body {
 
     
 .pinAttribute{
-        margin-right: auto;
+    margin-right: auto;
     margin-left: auto;
-    }
-    
+}

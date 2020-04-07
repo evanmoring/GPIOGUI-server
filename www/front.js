@@ -22,18 +22,105 @@ function readForm(){
     socket.emit('form',formDict);
 }
 
-function createPins(pinList) {
-    var count = pinList.length;
-    for(var i = 1; i < count; i++) { 
-        var currentPin = i;
-        createPinGrid(i);
+function showI2C(){
+    console.log('function')
+    if ($("i2cControls").style.display=="block"){
+        $("i2cControls").style.display="none";
+        $("showI2CButton").value = "Show I2C"
+    }
+    else{
+        $("i2cControls").style.display="block";
+        $("showI2CButton").value = "Hide I2C"
     }
 }
 
-function populatePinList(){
-    for (i in bcmDict){
-    let newOption = document.createElement('option');
+function submitI2C(){
+    let d = {}
+	d.readWriteSelection = document.querySelector('input[name = "readWriteSelector"]:checked').value;
+    	d.writeAddress = Number("0x"+writeAddress.value);
+	if(checkSub(d.writeAddress,4096)){
+		$("i2cReadout").innerHTML="Bad address. It should be 2-3 hexadecimal digits.";
+            return;
+	}
+    	d.readWriteDelay = Number(readWriteDelay.value);
+    if ((d.readWriteSelection != 'read') && checkWrite()){
+            $("i2cReadout").innerHTML="Bad command input. It should be one or more two-digit hexadecimal bytes separated by a space";
+            return;
+    }
+    if ((d.readWriteSelection != write) && checkRead()){
+        $("i2cReadout").innerHTML="Bad data length input. It should be the number of bytes to be returned in decimal notation";
+        return;
+    }
+    if (d.readWriteSelection == "both" && checkSub(d.readWriteDelay,2000)){
+        $("i2cReadout").innerHTML="Bad delay input. Choose a integer number of milliseconds below 2000";
+        return;
+    }
+        
+    console.log(d);
+$("i2cReadout").innerHTML="Data sent";
+    socket.emit('i2cForm',d);
     
+    function checkWrite(){
+            d.writeCommand = writeCommand.value.split(' ');
+            for (let i=0; i<d.writeCommand.length; i++){
+                d.writeCommand[i]=Number('0x'+d.writeCommand[i]);
+                if (checkSub(d.writeCommand[i],256)){
+                    return true;
+            }
+        }
+    }
+    
+    function checkRead(){
+        d.readLength = Number(readLength.value);
+        return checkSub(d.readLength,20);
+    }
+    
+    function checkSub (input,max){
+        if (isNaN(input) || input > max){
+            console.log('check was bad');
+            return true;  
+        }
+    }
+}
+
+function setupI2C (wA,wC,rL,d){
+    let controlList = [
+        ['writeAddress',wA,],
+        ['writeCommand',wC],
+        ['readLength',rL],
+        ['readWriteDelay',d]
+        ]
+    for (let i = 0; i<controlList.length; i++){
+        let c = controlList[i]
+        /*console.log($(c))*/
+        if (c[1]==1){
+            $(c[0]).disabled = false;
+        }
+        else {
+            $(c[0]).disabled = true;
+        }
+    }
+}
+
+function createPins(pinList) {
+    var count = pinList.length;
+    for(let i = 1; i < count; i++) { 
+        var currentPin = i;
+        createPinGrid(i);
+    }
+	$("direction3").innerHTML="i2c"
+	$("direction3").style.color="brown"
+	$("voltage3").innerHTML="SDA"
+	$("voltage3").style.color="brown"
+	$("direction5").innerHTML="i2c"
+	$("direction5").style.color="brown"
+	$("voltage5").innerHTML="SCL"
+	$("voltage5").style.color="brown"
+}
+
+function populatePinList(){
+    for (let i in bcmDict){
+    let newOption = document.createElement('option');
     newOption.innerHTML='PIN: '+i+'   BCM: '+bcmDict[i];
     newOption.value=bcmDict[i];
     $('pinSelect').appendChild(newOption);
@@ -41,6 +128,7 @@ function populatePinList(){
 }
 
 function inititalize(){
+    setupI2C(1,1,0,0,0);
     populatePinList();
     createPinGridHeader();
     createPinGridHeader();
@@ -67,17 +155,16 @@ function createPinGrid (currentPin) {
     addAttribute(currentPin,'bcm',bcmNumber(currentPin));
     addAttribute(currentPin,'direction','');
     addAttribute(currentPin,'voltage','') ; 
-    
-    function addAttribute(currentPin,prefix,text) {
-        name = prefix+String(currentPin);
-        var div = document.createElement("DIV");
-        $(String(currentPin)).appendChild(div);
-        div.setAttribute('id',name);
-        $(name).className=('pinAttribute '+ prefix);
-        $(name).innerHTML=text;
-    }
 }
 
+function addAttribute(currentPin,prefix,text) {
+    name = prefix+String(currentPin);
+    var div = document.createElement("DIV");
+    $(String(currentPin)).appendChild(div);
+    div.setAttribute('id',name);
+    $(name).className=('pinAttribute '+ prefix);
+    $(name).innerHTML=text;
+}
 function createPinGridHeader () {
     var div = document.createElement("DIV");
     $('pinGrid').appendChild(div);
@@ -88,21 +175,43 @@ function createPinGridHeader () {
     headerAttributes ('IN / OUT');
     headerAttributes ('0 / 1');
     
-    
     function headerAttributes (text){
         let numberDiv = document.createElement("Div")
         div.appendChild(numberDiv);
         numberDiv.innerHTML=text;
         numberDiv.className = ('pinAttributeHeaders ' +text)
     }
-    
 }
-
 
 var socket = io.connect();
 
+socket.on('i2cReturn',function(data){
+	console.log(data);
+	let newString = 'Data received: ';
+	for(let i = 0; i < data.length; i++){
+		if(i % 2 != 0){newString += (data[i]+' ').toUpperCase();}
+		else {newString +=data[i].toUpperCase();}
+	}
+	
+	$("i2cReadout").innerHTML=newString;
+});
+
+socket.on('i2cError',function(error){
+	console.log(error);
+	$("i2cReadout").innerHTML=`<div class="i2cError">Error!</div>    <div class = "i2cError"> Error Code: ${error.code} </div> <div class="i2cError">   Error Number: ${error.errno} </div>  <div class = "i2cError">  System Call: ${error.syscall}</div>`;
+})
+
+socket.on('i2cScanReturn',function(scanList){
+	console.log(scanList);
+	let listString = 'Available i2c addresses: ';
+	for (let i =0; i<scanList.length; i++){
+		console.log(scanList[i]);
+		listString += scanList[i].toString('16');
+	}
+	$("i2cReadout").innerHTML=`${listString}`
+});
+
 socket.on('pinData',function(data){
-    console.log(data)
     $('voltage'+data.boardNumber).innerHTML=data.voltage;
     if(data.voltage==1){
         $('voltage'+data.boardNumber).style.color='red';

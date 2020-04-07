@@ -5,6 +5,9 @@ var express = require('express');
 var Gpio = require('onoff').Gpio;
 var fs = require('fs');
 var util = require('util');
+const i2c = require('i2c-bus'); 
+
+const portNumber = 3000;
 
 function saveSettings (){
     fs.writeFile('./settings.json',JSON.stringify(pinList),function(err){
@@ -40,7 +43,7 @@ function loadSettings(){
 }
 
 function matchPins(){
-    console.log(pinList)
+    /*console.log(pinList)*/
     for (i in pinList){
         let cPin = pinList[i]
         if(cPin != false){
@@ -56,8 +59,11 @@ function matchPins(){
     
     }
 
-var bcmDict = {3:2,5:3,7:4,8:14,10:15,11:17,12:18,13:27,15:22,16:23,18:24,19:10,21:9,22:25,23:11,24:8,26:7,29:5,31:6,32:12,33:13,35:19,36:16,37:26,38:20,40:21};
+var bcmDict = {7:4,8:14,10:15,11:17,12:18,13:27,15:22,16:23,18:24,19:10,21:9,22:25,23:11,24:8,26:7,29:5,31:6,32:12,33:13,35:19,36:16,37:26,38:20,40:21};
 
+/*
+var bcmDict = {3:2,5:3,7:4,8:14,10:15,11:17,12:18,13:27,15:22,16:23,18:24,19:10,21:9,22:25,23:11,24:8,26:7,29:5,31:6,32:12,33:13,35:19,36:16,37:26,38:20,40:21};
+*/
 var bcmDictR = {};
 blinkDict = {
 }
@@ -163,7 +169,7 @@ function setupConnection (){
 
     io.sockets.on('connection', function (socket) {
         setupPins()
-        loadSettings()
+        /*loadSettings()*/
         socket.on('form', function(data){
             if (data.voltage=='Blink'){
                 pinList[data.bcmPin].blink=true
@@ -206,12 +212,74 @@ function setupConnection (){
         socket.on('loadSettings',function(data){
             loadSettings();
         })
+	socket.on('i2cForm',function(d){
+		console.log(d);
+		i2cPoll (d.writeAddress,d.writeCommand,d.readLength,d.readWriteDelay);
+
+		function i2cPoll(shtAddr,writeBytes,readLength, delay) {
+			let readBuff = Buffer.alloc(readLength);
+			let wholeCom = Buffer.from(writeBytes);
+			let i2c1 = i2c.openSync(1);
+			try{
+				if(d.readWriteSelection !="read"){
+					console.log("write");
+					i2c1.i2cWriteSync(shtAddr, wholeCom.length, wholeCom);
+				}
+				if(d.readWriteSelection =="both"){
+					console.log("both");
+					setTimeout(read, delay);
+				}
+				if (d.readWriteSelection =="read"){
+					console.log("read");
+					read();
+				}
+				function read () {
+					data = i2c1.i2cReadSync(shtAddr, readBuff.length, readBuff);
+					io.sockets.emit('i2cReturn',readBuff.toString('hex'));
+					console.log(data)
+					console.log(readBuff);
+				}
+			}
+			catch(err){
+				io.sockets.emit('i2cError',err);
+			}
+			try{
+				i2c1.closeSync();
+			}
+			catch(err){
+				console.log(err);
+			}
+			return	
+		}
+	return
+	});
+/*
+	socket.on('i2cScan',function(){
+		let i2cOther = i2c.openSync(1);
+		console.log(i2cOther);
+		try{
+			console.log('started scan');
+			let scan = i2cOther.scanSync();
+			console.log(scan);
+			io.sockets.emit('i2cScanReturn',scan);
+			console.log('emitted');
+			i2cOther.closeSync();
+			console.log('closed');
+		}
+
+		catch(err){
+			console.log(err);
+		}
+		i2cOther.closeSync();
+		console.log('closed');
+		return
+	});*/
         getAttributes();
         console.log('connection');
     }); 
 
-    http.listen(3000, function(request,response){
-      console.log('listening on *:3000');
+    http.listen(portNumber, function(request,response){
+      console.log('listening on port '+portNumber);
     });
 }
 

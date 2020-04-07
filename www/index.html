@@ -3,30 +3,75 @@
 <script language="javascript" src="front.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
 <body onload="inititalize()">
     <div id="wrapper">
+        
         <div id ="controls" class="border">
-        <div id ="title">GPIO CONTROLS</div>
-        <form name = 'controlForm' action='' method ='get' class="controlButtons">
-            <select name = 'boardPin' id="pinSelect" class ="control form"></select>
-            <select name = 'voltage' id="voltageSelect" class="control form">
-                <option>in</option>
-                <option>1</option>
-                <option>0</option>
-                <option>1 / 0</option>
-                <option>0 / 1</option>
-                <option>Blink</option>
-            </select>
-            <input type="button" name="submitButton" value='Submit' onclick="readForm()" class ="control button">
-        </form>
-        <div class="controlButtons">
-            <input type="button" name="saveButton" value='Save Data' onclick="saveData()" class="control button">
-            <input type="button" name="loadButton" value='Load Data' onclick="loadData()" class="control button">
+            <div id ="title">GPIO CONTROLS</div>
+            <form name = 'controlForm' action='' method ='get' class="controlButtons">
+                <select name = 'boardPin' id="pinSelect" class ="control form"></select>
+                <select name = 'voltage' id="voltageSelect" class="control form">
+                    <option>in</option>
+                    <option>1</option>
+                    <option>0</option>
+                    <option>1 / 0</option>
+                    <option>0 / 1</option>
+                    <option>Blink</option>
+                </select>
+                <input type="button" name="submitButton" value='Submit' onclick="readForm()" class ="control button">
+            </form>
+            <div class="controlButtons">
+                <input type="button" name="saveButton" value='Save Data' onclick="saveData()" class="control button">
+                <input type="button" name="loadButton" value='Load Data' onclick="loadData()" class="control button">
+                <input type="button" id = "showI2CButton" name="showI2C" value='Show I2C' onclick="showI2C()" class="control button">
+            </div>
         </div>
+        
+        <div id = "i2cControls" class ="border none">
+            <div id="i2ctitle">I2C CONTROLS</div>
+            <div id="i2cGrid">
+                <div class = "inputLabelWrapper">
+                    <label for="writeAddress">Address</label>
+                    <input type="text" id ="writeAddress" class= "control text" placeholder="1A">
+                </div>
+                <div class = "inputLabelWrapper">
+                    <label for="writeCommand">Bytes to Send</label>
+                    <input type="text" id ="writeCommand" class= "control text" placeholder="1A 2B 3C">
+                </div>
+                <div class = "inputLabelWrapper">
+                    <label for="readLength"> Bytes to Read</label> 
+                    <input type="text" id ="readLength" class= "control text" placeholder="integer of bytes">
+                </div>
+                <div class = "inputLabelWrapper">
+                    <label for="readWriteDelay">Delay</label>
+                    <input type="text" id ="readWriteDelay" class= "control text" placeholder="milliseconds">
+                </div>
+            </div>
+            <div id = "radioDial">
+                <div class = "radio">
+                    <input type="button" value="Submit" class= "control button" onclick="submitI2C()">
+                </div>
+                <div class="radio">
+                    <input type="radio" id="write" onclick="setupI2C(1,1,0,0)" name="readWriteSelector" value="write" checked>
+                    <label for="write">Write</label><br>
+                </div>
+                <div class = "radio">
+                    <input type="radio" id="read" onclick="setupI2C(1,0,1,0)" name="readWriteSelector" value="read">
+                    <label for="read">Read</label><br>
+                </div>  
+                <div class ="radio">
+                    <input type="radio" id="both" onclick= "setupI2C(1,1,1,1)" name="readWriteSelector" value="both">
+                    <label for="both">Both with delay</label><br>
+                </div>
+
+            </div>  
+            <div id = "i2cReadout"> i2c readout</div>        
         </div>
-        <div id="pinGrid" class="border">
+        <div id="pinGridWrapper" class = "border">
+            <div id="pinGrid" ></div>
         </div>
     </div>
 </body>
