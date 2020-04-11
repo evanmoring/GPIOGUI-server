@@ -1,20 +1,20 @@
-# GPIOGUI-server
+<h1> GPIOGUI-server</h1>
 
 A webserver for controlling GPIO pins
 
-Installation:
+<h3>Installation and starting the server:</h3>
 
 I packaged everything you will need including the node modules and the node executable into the gpioserver.tar.gz. 
 
-To access it, download the file into a folder you want to use for the server. Unpack the file with the command:
+To download the files to your home directory and run the program you can enter these commands in your terminal:
 
-tar -xzvf gpioserver.tar.gz
-
-Starting the server:
-
-Navigate to the folder where you unpacked the .tar.gz. Then use this command:
-
+cd ~
+wget https://raw.githubusercontent.com/evanmoring/GPIOGUI-server/master/GPIOGUI-server.tar.gz
+tar -xzvf GPIOGUI-server.tar.gz
+cd GPIOGUI-server
 ./node server.js
+
+cd ~ takes you to your home folder. The wget command pulls the compressed archive off of github. The tar command unpacks the tar.gz file into your current directory. cd GPIOGUI-server navigates to the newly created folder. ./node server.js runs server.js with the program node which I included for your convenience.
 
 When it is ready (<5 seconds for pi4, about 10 seconds for pi0), the console will say "listening on port 3000".
 
