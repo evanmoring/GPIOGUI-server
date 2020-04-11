@@ -8,11 +8,11 @@ I packaged everything you will need including the node modules and the node exec
 
 To download the files to your home directory and run the program you can enter these commands in your terminal:
 
-cd ~
-wget https://raw.githubusercontent.com/evanmoring/GPIOGUI-server/master/GPIOGUI-server.tar.gz
-tar -xzvf GPIOGUI-server.tar.gz
-cd GPIOGUI-server
-./node server.js
+cd ~ <br>
+wget https://raw.githubusercontent.com/evanmoring/GPIOGUI-server/master/GPIOGUI-server.tar.gz <br>
+tar -xzvf GPIOGUI-server.tar.gz <br>
+cd GPIOGUI-server <br>
+./node server.js <br>
 
 cd ~ takes you to your home folder. The wget command pulls the compressed archive off of github. The tar command unpacks the tar.gz file into your current directory. cd GPIOGUI-server navigates to the newly created folder. ./node server.js runs server.js with the program node which I included for your convenience.
 
