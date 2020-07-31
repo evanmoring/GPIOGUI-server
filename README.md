@@ -4,7 +4,7 @@ A webserver for controlling GPIO pins
 
 <h3>Installation and starting the server:</h3>
 
-I packaged everything you will need including the node modules and the node executable into the gpioserver.tar.gz. 
+I packaged everything you will need including the node modules and the node executable into the gpioserver.tar.gz. So far I have tested this on a Pi0 and 2GB Pi4 with clean installs of Buster. I can't guarantee these instructions will work on other Rasbian versions.  
 
 To download the files to your home directory and run the program you can enter these commands in your terminal on your pi:
 
